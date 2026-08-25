@@ -744,7 +744,7 @@
     }
 
     el.toastStack.appendChild(node);
-    window.setTimeout(dismiss, action ? 5000 : 2600);
+    window.setTimeout(dismiss, action ? 8000 : 2600);
 
     const toasts = el.toastStack.querySelectorAll(".toast");
     if (toasts.length > 3) toasts[0].remove();

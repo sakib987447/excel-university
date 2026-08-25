@@ -464,8 +464,11 @@ kbd {
 
 .chips {
   display: flex;
+  flex: 1 1 0;
+  min-width: 0;
   gap: 8px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding-bottom: 2px;
 }
