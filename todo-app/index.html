@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow — Organize your day. Get things done.</title>
+  <meta name="description" content="TaskFlow is a modern to-do list app to organize your day and get things done.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="app-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">TF</span>
+        <span class="brand-text">
+          <span class="brand-title">TaskFlow</span>
+          <span class="brand-subtitle">Organize your day. Get things done.</span>
+        </span>
+      </div>
+
+      <div class="header-actions">
+        <div class="search-wrap header-search">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input id="searchInput" type="search" placeholder="Search tasks..." aria-label="Search tasks" autocomplete="off">
+        </div>
+        <button id="themeToggle" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode" title="Toggle theme (T)">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+          </svg>
+        </button>
+        <button class="avatar-btn" type="button" aria-label="Your profile" title="Your profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.6"></circle>
+            <path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container dashboard" id="main">
+    <section class="welcome card glass" aria-labelledby="greeting">
+      <div>
+        <h1 class="welcome-title" id="greeting">Good Morning 👋</h1>
+        <p class="welcome-sub">Let's get your tasks done today.</p>
+      </div>
+      <p class="welcome-date" id="todayDate"></p>
+    </section>
+
+    <section class="stats" aria-label="Task statistics">
+      <article class="card stat-card">
+        <span class="stat-icon stat-icon--total" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h12M8 12h12M8 18h12"></path><circle cx="4" cy="6" r="1.4"></circle><circle cx="4" cy="12" r="1.4"></circle><circle cx="4" cy="18" r="1.4"></circle></svg>
+        </span>
+        <p class="stat-label">Total Tasks</p>
+        <p class="stat-value" id="statTotal">0</p>
+        <p class="stat-sub" id="statTotalSub">Nothing on your plate</p>
+      </article>
+
+      <article class="card stat-card">
+        <span class="stat-icon stat-icon--done" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+        </span>
+        <p class="stat-label">Completed</p>
+        <p class="stat-value" id="statCompleted">0</p>
+        <p class="stat-sub" id="statCompletedSub">No tasks finished yet</p>
+      </article>
+
+      <article class="card stat-card">
+        <span class="stat-icon stat-icon--pending" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5V12l3 2"></path></svg>
+        </span>
+        <p class="stat-label">Pending</p>
+        <p class="stat-value" id="statPending">0</p>
+        <p class="stat-sub" id="statPendingSub">All clear</p>
+      </article>
+
+      <article class="card stat-card">
+        <span class="stat-icon stat-icon--progress" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18V9M10 18V5M16 18v-6M22 18H2"></path></svg>
+        </span>
+        <p class="stat-label">Progress</p>
+        <p class="stat-value" id="statProgress">0%</p>
+        <p class="stat-sub" id="statProgressSub">Add a task to get started</p>
+      </article>
+    </section>
+
+    <div class="layout">
+      <div class="layout-main">
+        <section class="card compose" aria-labelledby="composeTitle">
+          <h2 class="section-title" id="composeTitle">Add New Task</h2>
+          <form id="taskForm" novalidate>
+            <div class="field">
+              <label for="taskTitle">Task title</label>
+              <input id="taskTitle" name="title" type="text" maxlength="120" placeholder="e.g. Finish the JavaScript module" autocomplete="off">
+              <p class="error" id="titleError" role="alert" hidden></p>
+            </div>
+
+            <div class="field">
+              <label for="taskDescription">Description <span class="optional">(optional)</span></label>
+              <textarea id="taskDescription" name="description" rows="2" maxlength="500" placeholder="Add a few details…"></textarea>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="taskDueDate">Due date</label>
+                <input id="taskDueDate" name="dueDate" type="date">
+                <p class="error" id="dueDateError" role="alert" hidden></p>
+              </div>
+              <div class="field">
+                <label for="taskPriority">Priority</label>
+                <select id="taskPriority" name="priority">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="taskCategory">Category</label>
+                <select id="taskCategory" name="category">
+                  <option value="personal" selected>Personal</option>
+                  <option value="work">Work</option>
+                  <option value="study">Study</option>
+                  <option value="shopping">Shopping</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="compose-footer">
+              <p class="hint">Press <kbd>Enter</kbd> to add · <kbd>/</kbd> to search · <kbd>Esc</kbd> to close</p>
+              <button class="btn btn-primary" type="submit" id="addTaskBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                Add Task
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card toolbar" aria-label="Filter and sort tasks">
+          <div class="toolbar-row">
+            <div class="chips" id="statusFilters" role="tablist" aria-label="Status filters">
+              <button class="chip is-active" type="button" role="tab" aria-selected="true" data-filter="all">All</button>
+              <button class="chip" type="button" role="tab" aria-selected="false" data-filter="active">Active</button>
+              <button class="chip" type="button" role="tab" aria-selected="false" data-filter="completed">Completed</button>
+              <button class="chip" type="button" role="tab" aria-selected="false" data-filter="high">High Priority</button>
+              <button class="chip" type="button" role="tab" aria-selected="false" data-filter="today">Due Today</button>
+            </div>
+
+            <div class="sort-wrap">
+              <label for="sortSelect">Sort</label>
+              <select id="sortSelect">
+                <option value="newest" selected>Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="priority">Priority</option>
+                <option value="dueDate">Due Date</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="chips chips--category" id="categoryFilters" aria-label="Category filters">
+            <button class="chip is-active" type="button" data-category="all">All <span class="chip-count" data-count="all">0</span></button>
+            <button class="chip" type="button" data-category="personal">Personal <span class="chip-count" data-count="personal">0</span></button>
+            <button class="chip" type="button" data-category="work">Work <span class="chip-count" data-count="work">0</span></button>
+            <button class="chip" type="button" data-category="study">Study <span class="chip-count" data-count="study">0</span></button>
+            <button class="chip" type="button" data-category="shopping">Shopping <span class="chip-count" data-count="shopping">0</span></button>
+            <button class="chip" type="button" data-category="other">Other <span class="chip-count" data-count="other">0</span></button>
+          </div>
+        </section>
+
+        <section class="task-section" aria-labelledby="activeTitle">
+          <div class="section-head">
+            <h2 class="section-title" id="activeTitle">My Tasks <span class="badge-count" id="activeCount">0</span></h2>
+          </div>
+          <ul class="task-list" id="taskList"></ul>
+
+          <div class="empty-state card" id="emptyState" hidden>
+            <span class="empty-art" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="3"></rect><path d="M8.5 9.5h7M8.5 13.5h7M8.5 17h4"></path></svg>
+            </span>
+            <h3 id="emptyTitle">No tasks yet</h3>
+            <p id="emptyText">Add your first task and start being productive.</p>
+            <button class="btn btn-primary" type="button" id="emptyAddBtn">Add Your First Task</button>
+          </div>
+        </section>
+
+        <section class="task-section" aria-labelledby="completedTitle" id="completedSection" hidden>
+          <div class="section-head">
+            <h2 class="section-title" id="completedTitle">Completed <span class="badge-count" id="completedCount">0</span></h2>
+            <button class="btn btn-ghost btn-sm" type="button" id="clearCompletedBtn">Clear completed</button>
+          </div>
+          <ul class="task-list" id="completedList"></ul>
+        </section>
+      </div>
+
+      <aside class="layout-side">
+        <section class="card progress-card" aria-labelledby="progressTitle">
+          <h2 class="section-title" id="progressTitle">Today's Progress</h2>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 120 120" role="img" aria-labelledby="ringLabel">
+              <title id="ringLabel">Completion progress</title>
+              <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+              <circle class="ring-value" id="progressRing" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div class="ring-center">
+              <p class="ring-percent" id="progressPercent">0%</p>
+              <p class="ring-caption">completed</p>
+            </div>
+          </div>
+          <dl class="progress-legend">
+            <div><dt>Completed</dt><dd id="progressCompleted">0</dd></div>
+            <div><dt>Remaining</dt><dd id="progressRemaining">0</dd></div>
+          </dl>
+        </section>
+
+        <section class="card list-card" aria-labelledby="todayTitle">
+          <h2 class="section-title" id="todayTitle">Today's Tasks</h2>
+          <ul class="mini-list" id="todayList"></ul>
+          <p class="mini-empty" id="todayEmpty">You're all caught up! 🎉</p>
+        </section>
+
+        <section class="card list-card" aria-labelledby="upcomingTitle">
+          <h2 class="section-title" id="upcomingTitle">Upcoming Tasks</h2>
+          <ul class="mini-list" id="upcomingList"></ul>
+          <p class="mini-empty" id="upcomingEmpty">Nothing on the horizon yet.</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Edit modal -->
+  <div class="modal-backdrop" id="editModal" hidden>
+    <div class="modal card" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+      <header class="modal-head">
+        <h2 id="editModalTitle">Edit Task</h2>
+        <button class="icon-btn icon-btn--sm" type="button" data-close-modal aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+        </button>
+      </header>
+
+      <form id="editForm" novalidate>
+        <div class="field">
+          <label for="editTitle">Task title</label>
+          <input id="editTitle" type="text" maxlength="120" autocomplete="off">
+          <p class="error" id="editTitleError" role="alert" hidden></p>
+        </div>
+        <div class="field">
+          <label for="editDescription">Description</label>
+          <textarea id="editDescription" rows="3" maxlength="500"></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="editDueDate">Due date</label>
+            <input id="editDueDate" type="date">
+          </div>
+          <div class="field">
+            <label for="editPriority">Priority</label>
+            <select id="editPriority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="editCategory">Category</label>
+            <select id="editCategory">
+              <option value="personal">Personal</option>
+              <option value="work">Work</option>
+              <option value="study">Study</option>
+              <option value="shopping">Shopping</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <footer class="modal-foot">
+          <button class="btn btn-ghost" type="button" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" type="submit">Save Changes</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete modal -->
+  <div class="modal-backdrop" id="deleteModal" hidden>
+    <div class="modal modal--sm card" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalText">
+      <div class="danger-art" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"></path><path d="M6.5 7l.8 12A2 2 0 0 0 9.3 21h5.4a2 2 0 0 0 2-1.9l.8-12"></path></svg>
+      </div>
+      <h2 id="deleteModalTitle">Delete Task?</h2>
+      <p id="deleteModalText">Are you sure you want to delete this task? This action cannot be undone.</p>
+      <footer class="modal-foot modal-foot--center">
+        <button class="btn btn-ghost" type="button" data-close-modal>Cancel</button>
+        <button class="btn btn-danger" type="button" id="confirmDeleteBtn">Delete</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
