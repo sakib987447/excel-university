@@ -16,11 +16,7 @@
   <header class="app-header">
     <div class="container header-inner">
       <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 12.5 9 17.5 20 6.5"></path>
-          </svg>
-        </span>
+        <span class="brand-mark" aria-hidden="true">TF</span>
         <span class="brand-text">
           <span class="brand-title">TaskFlow</span>
           <span class="brand-subtitle">Organize your day. Get things done.</span>
@@ -28,6 +24,10 @@
       </div>
 
       <div class="header-actions">
+        <div class="search-wrap header-search">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input id="searchInput" type="search" placeholder="Search tasks..." aria-label="Search tasks" autocomplete="off">
+        </div>
         <button id="themeToggle" class="icon-btn" type="button" aria-pressed="false" aria-label="Switch to dark mode" title="Toggle theme (T)">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4"></circle>
@@ -50,7 +50,7 @@
   <main class="container dashboard" id="main">
     <section class="welcome card glass" aria-labelledby="greeting">
       <div>
-        <h1 class="welcome-title" id="greeting">Hello 👋</h1>
+        <h1 class="welcome-title" id="greeting">Good Morning 👋</h1>
         <p class="welcome-sub">Let's get your tasks done today.</p>
       </div>
       <p class="welcome-date" id="todayDate"></p>
@@ -63,6 +63,7 @@
         </span>
         <p class="stat-label">Total Tasks</p>
         <p class="stat-value" id="statTotal">0</p>
+        <p class="stat-sub" id="statTotalSub">Nothing on your plate</p>
       </article>
 
       <article class="card stat-card">
@@ -71,6 +72,7 @@
         </span>
         <p class="stat-label">Completed</p>
         <p class="stat-value" id="statCompleted">0</p>
+        <p class="stat-sub" id="statCompletedSub">No tasks finished yet</p>
       </article>
 
       <article class="card stat-card">
@@ -79,6 +81,7 @@
         </span>
         <p class="stat-label">Pending</p>
         <p class="stat-value" id="statPending">0</p>
+        <p class="stat-sub" id="statPendingSub">All clear</p>
       </article>
 
       <article class="card stat-card">
@@ -87,13 +90,14 @@
         </span>
         <p class="stat-label">Progress</p>
         <p class="stat-value" id="statProgress">0%</p>
+        <p class="stat-sub" id="statProgressSub">Add a task to get started</p>
       </article>
     </section>
 
     <div class="layout">
       <div class="layout-main">
         <section class="card compose" aria-labelledby="composeTitle">
-          <h2 class="section-title" id="composeTitle">Add Task</h2>
+          <h2 class="section-title" id="composeTitle">Add New Task</h2>
           <form id="taskForm" novalidate>
             <div class="field">
               <label for="taskTitle">Task title</label>
@@ -142,12 +146,7 @@
           </form>
         </section>
 
-        <section class="card toolbar" aria-label="Search, filter and sort tasks">
-          <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-            <input id="searchInput" type="search" placeholder="Search tasks..." aria-label="Search tasks" autocomplete="off">
-          </div>
-
+        <section class="card toolbar" aria-label="Filter and sort tasks">
           <div class="toolbar-row">
             <div class="chips" id="statusFilters" role="tablist" aria-label="Status filters">
               <button class="chip is-active" type="button" role="tab" aria-selected="true" data-filter="all">All</button>
@@ -180,7 +179,7 @@
 
         <section class="task-section" aria-labelledby="activeTitle">
           <div class="section-head">
-            <h2 class="section-title" id="activeTitle">Tasks <span class="badge-count" id="activeCount">0</span></h2>
+            <h2 class="section-title" id="activeTitle">My Tasks <span class="badge-count" id="activeCount">0</span></h2>
           </div>
           <ul class="task-list" id="taskList"></ul>
 
@@ -296,8 +295,8 @@
       <div class="danger-art" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"></path><path d="M6.5 7l.8 12A2 2 0 0 0 9.3 21h5.4a2 2 0 0 0 2-1.9l.8-12"></path></svg>
       </div>
-      <h2 id="deleteModalTitle">Delete task</h2>
-      <p id="deleteModalText">Are you sure you want to delete this task?</p>
+      <h2 id="deleteModalTitle">Delete Task?</h2>
+      <p id="deleteModalText">Are you sure you want to delete this task? This action cannot be undone.</p>
       <footer class="modal-foot modal-foot--center">
         <button class="btn btn-ghost" type="button" data-close-modal>Cancel</button>
         <button class="btn btn-danger" type="button" id="confirmDeleteBtn">Delete</button>

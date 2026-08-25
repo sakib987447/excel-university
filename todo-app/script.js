@@ -59,6 +59,10 @@
     statCompleted: $("#statCompleted"),
     statPending: $("#statPending"),
     statProgress: $("#statProgress"),
+    statTotalSub: $("#statTotalSub"),
+    statCompletedSub: $("#statCompletedSub"),
+    statPendingSub: $("#statPendingSub"),
+    statProgressSub: $("#statProgressSub"),
 
     form: $("#taskForm"),
     title: $("#taskTitle"),
@@ -106,7 +110,6 @@
     editTitleError: $("#editTitleError"),
 
     deleteModal: $("#deleteModal"),
-    deleteModalText: $("#deleteModalText"),
     confirmDeleteBtn: $("#confirmDeleteBtn"),
 
     themeToggle: $("#themeToggle"),
@@ -238,7 +241,8 @@
     const needle = query.trim().toLowerCase();
     return (
       task.title.toLowerCase().includes(needle) ||
-      task.description.toLowerCase().includes(needle)
+      task.description.toLowerCase().includes(needle) ||
+      CATEGORIES[task.category].toLowerCase().includes(needle)
     );
   }
 
@@ -380,7 +384,7 @@
     return item;
   }
 
-  function buildMiniElement(task) {
+  function buildMiniElement(task, useRelativeUpcomingLabel = false) {
     const item = document.createElement("li");
     const status = dueStatus(task);
 
@@ -389,11 +393,22 @@
     if (task.completed) item.classList.add("is-completed");
     if (status === "soon" || status === "overdue") item.classList.add("is-soon");
 
-    const subtitle = task.dueDate
-      ? status === "overdue"
-        ? `Overdue · ${formatDueDate(task.dueDate)}`
-        : formatDueDate(task.dueDate)
-      : "No due date";
+    let subtitle = "No due date";
+    if (task.dueDate) {
+      if (status === "overdue") {
+        subtitle = `Overdue · ${formatDueDate(task.dueDate)}`;
+      } else if (useRelativeUpcomingLabel) {
+        const diff = daysUntil(task.dueDate);
+        subtitle =
+          diff === 1
+            ? "Due tomorrow"
+            : diff >= 2 && diff <= 7
+              ? `Due in ${diff} days`
+              : `Due ${formatDueDate(task.dueDate)}`;
+      } else {
+        subtitle = formatDueDate(task.dueDate);
+      }
+    }
 
     item.innerHTML = `
       <span class="mini-dot mini-dot--${task.priority}" aria-hidden="true"></span>
@@ -426,7 +441,12 @@
     if (!isEmpty) return;
 
     const hasTasks = state.tasks.length > 0;
-    if (hasTasks) {
+    if (state.search.trim()) {
+      el.emptyTitle.textContent = "No tasks found";
+      el.emptyText.textContent = "Try a different keyword.";
+      el.emptyAddBtn.textContent = "Clear search";
+      el.emptyAddBtn.dataset.mode = "reset";
+    } else if (hasTasks) {
       el.emptyTitle.textContent = "No matching tasks";
       el.emptyText.textContent = "Try a different search, filter or category.";
       el.emptyAddBtn.textContent = "Clear filters";
@@ -445,6 +465,17 @@
     el.statCompleted.textContent = String(completed);
     el.statPending.textContent = String(pending);
     el.statProgress.textContent = `${progress}%`;
+
+    const dueToday = state.tasks.filter((task) => task.dueDate === todayKey()).length;
+    const overdue = state.tasks.filter((task) => dueStatus(task) === "overdue").length;
+    el.statTotalSub.textContent =
+      total === 0 ? "No tasks yet" : dueToday > 0 ? `${dueToday} due today` : "No tasks due today";
+    el.statCompletedSub.textContent =
+      completed === 0 ? "No tasks finished yet" : `${completed} of ${total} done`;
+    el.statPendingSub.textContent =
+      pending === 0 ? "All clear" : overdue > 0 ? `${overdue} overdue` : "Nothing overdue";
+    el.statProgressSub.textContent =
+      total === 0 ? "Add a task to get started" : `${completed} of ${total} tasks complete`;
 
     el.progressPercent.textContent = `${progress}%`;
     el.progressCompleted.textContent = String(completed);
@@ -481,7 +512,9 @@
       .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
       .slice(0, 6);
 
-    el.upcomingList.replaceChildren(...upcoming.map(buildMiniElement));
+    el.upcomingList.replaceChildren(
+      ...upcoming.map((task) => buildMiniElement(task, true))
+    );
     el.upcomingEmpty.hidden = upcoming.length > 0;
   }
 
@@ -528,11 +561,6 @@
       el.title.focus();
       return;
     }
-    if (title.length < 3) {
-      showFieldError(el.title, el.titleError, "Use at least 3 characters.");
-      el.title.focus();
-      return;
-    }
     if (el.dueDate.value && !isValidDateString(el.dueDate.value)) {
       showFieldError(el.dueDate, el.dueDateError, "Please pick a valid date.");
       return;
@@ -569,7 +597,7 @@
     task.completedAt = task.completed ? Date.now() : null;
     saveTasks();
     render();
-    toast(task.completed ? "Task completed" : "Task marked active", task.completed ? "success" : "info");
+    toast(task.completed ? "Task completed" : "Task restored", task.completed ? "success" : "info");
   }
 
   function saveEditedTask() {
@@ -578,8 +606,8 @@
 
     const title = el.editTitle.value.trim();
     clearFieldError(el.editTitle, el.editTitleError);
-    if (title.length < 3) {
-      showFieldError(el.editTitle, el.editTitleError, "Use at least 3 characters.");
+    if (!title) {
+      showFieldError(el.editTitle, el.editTitleError, "Please enter a task title.");
       el.editTitle.focus();
       return;
     }
@@ -605,9 +633,12 @@
     state.tasks.splice(index, 1);
     saveTasks();
 
+    let finished = false;
     const finish = () => {
+      if (finished) return;
+      finished = true;
       render();
-      toast("Task deleted", "danger", { label: "Undo", onClick: undoDelete });
+      toast("Task deleted successfully", "danger", { label: "Undo", onClick: undoDelete });
     };
 
     if (node) {
@@ -626,7 +657,7 @@
     state.lastDeleted = null;
     saveTasks();
     render();
-    toast("Task restored", "info");
+    toast("Deleted task restored", "info");
   }
 
   function clearCompleted() {
@@ -705,7 +736,6 @@
     if (!task) return;
 
     state.pendingDeleteId = id;
-    el.deleteModalText.textContent = `Are you sure you want to delete "${task.title}"?`;
     openModal(el.deleteModal);
   }
 
@@ -779,6 +809,7 @@
   function toggleTheme() {
     const current = document.documentElement.getAttribute("data-theme");
     applyTheme(current === "dark" ? "light" : "dark");
+    toast("Theme changed", "info");
   }
 
   /* ---------------------------------------------------------------------- */

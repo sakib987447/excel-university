@@ -176,6 +176,9 @@ input, textarea, select { font: inherit; color: inherit; }
   color: #fff;
   background: linear-gradient(140deg, var(--accent), var(--blue));
   box-shadow: 0 10px 22px -10px var(--accent);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
 }
 .brand-mark svg { width: 22px; height: 22px; }
 
@@ -183,7 +186,8 @@ input, textarea, select { font: inherit; color: inherit; }
 .brand-title { font-size: 1.22rem; font-weight: 800; letter-spacing: -0.03em; }
 .brand-subtitle { font-size: 0.8rem; color: var(--text-muted); }
 
-.header-actions { display: flex; align-items: center; gap: 10px; }
+.header-actions { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.header-search { width: 220px; max-width: 100%; flex: none; }
 
 .icon-btn,
 .avatar-btn {
@@ -285,6 +289,7 @@ input, textarea, select { font: inherit; color: inherit; }
   color: var(--text-faint);
 }
 .stat-value { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; }
+.stat-sub { margin-top: 3px; font-size: 0.78rem; color: var(--text-muted); }
 
 .layout {
   display: grid;
@@ -831,6 +836,9 @@ kbd {
 }
 
 @media (max-width: 760px) {
+  .header-inner { flex-wrap: wrap; }
+  .header-actions { flex: 1 1 100%; flex-wrap: wrap; width: 100%; }
+  .header-search { width: 100%; max-width: none; flex: 1 1 100%; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .field-row { grid-template-columns: minmax(0, 1fr); }
   .brand-subtitle { display: none; }
