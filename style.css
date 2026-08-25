@@ -1,9 +1,17 @@
 :root{
     --primary-blue: #00274d;
     --secondry-gold: #d4af37;
+    --gold-hover: #b8941f;
     --light-blue: #e6f2ff;
     --dark-gray: #333;
     --light-gray: #f8f9fa;
+
+    --radius-sm: 5px;
+    --radius-md: 10px;
+    --shadow-card: 0 5px 15px rgba(0, 0, 0, 0.8);
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --shadow-raised: 0 15px 30px rgba(0, 0, 0, 0.15);
+    --transition-base: all 0.3s ease;
 }
 
 .hero-bg{
@@ -12,16 +20,25 @@
     background-position: center;
 }
 
+/* Shared spacing for the decorative section/feature icons */
+.about-icon,
+.courses-icon{
+    margin-bottom: 1.5rem;
+}
+
 .about-icon{
     font-size: 2.5rem;
     color: var(--secondry-gold);
-    margin-bottom: 1.5rem;
+}
+
+.courses-icon{
+    font-size: 2rem;
 }
 
 .section-title{
     color: var(--primary-blue);
     font-weight: 700;
-    margin-bottom: 1.5rem;  
+    margin-bottom: 1.5rem;
     position: relative;
     padding-bottom: 15px;
 }
@@ -29,7 +46,7 @@
 .section-title::after{
     content: '';
     position: absolute;
-    width: 80px;     
+    width: 80px;
     height: 4px;
     background-color: var(--secondry-gold);
     bottom: 0;
@@ -42,18 +59,22 @@
     padding: 80px 0;
 }
 
-.courses-card{
-    border-radius: 10px;
-    overflow: hidden;
-    transition: all 0.3 ease;
+/* Shared rounded, borderless surface used by cards and the contact form */
+.surface{
+    border-radius: var(--radius-md);
     border: none;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+}
+
+.courses-card{
+    overflow: hidden;
+    transition: var(--transition-base);
+    box-shadow: var(--shadow-card);
     height: 100%;
 }
 
 .courses-card:hover{
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-raised);
 }
 
 .bg-light-blue{
@@ -67,57 +88,53 @@
     border-bottom: none;
 }
 
-.courses-icon{
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
+/* Shared button base for the site's custom buttons */
+.btn-gold,
+.btn-submit{
+    font-weight: 600;
+    padding: 12px 30px;
+    border: none;
+    transition: var(--transition-base);
+}
+
+.btn-gold:hover,
+.btn-submit:hover{
+    background-color: var(--gold-hover);
 }
 
 .btn-gold{
     background-color: var(--secondry-gold);
     color: var(--light-blue);
-    font-weight: 600;
-    padding: 12px 30px;
     border-radius: 30px;
-    border: none;
-    transition: all 0.s ease;
 }
 
 .btn-gold:hover{
-    background-color: #b8941f;
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
+.btn-submit{
+    background-color: var(--primary-blue);
+    color: white;
+    border-radius: var(--radius-sm);
+    width: 100%;
+}
+
 .contact-form{
     background-color: white;
-    border-radius: 10px;
     padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-soft);
 }
 
 .form-control{
     padding: 12px 15px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     border: 1px solid #ddd;
     margin-bottom: 1.5rem;
 }
 
 .form-control:focus{
     border-color: var(--primary-blue);
-}
-
-.btn-submit{
-    background-color: var(--primary-blue);
-    color: white;
-    font-weight: 600;
-    padding: 12px 30px;
-    border-radius: 5px;
-    border: none;
-    width: 100%;
-}
-
-.btn-submit:hover{
-    background-color: #b8941f;
 }
 
 .footer{
@@ -137,8 +154,8 @@
     color: white;
     text-decoration: none;
     display: block;
-    margin-bottom:10px ;
-    transition: all 0.3s ease;
+    margin-bottom: 10px;
+    transition: var(--transition-base);
 }
 
 .footer-link a:hover{
